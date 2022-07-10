@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.trustaccounting.FormControls">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="51.0" minHeight="51.0" prefHeight="51.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="Infinity" spacing="20.0" GridPane.rowIndex="1">
+         <children>
+            <MFXButton fx:id="newBtn" buttonType="RAISED" prefWidth="81.0" text="جديد" />
+            <MFXButton buttonType="RAISED" prefWidth="81.0" text="إضافة" />
+            <MFXButton buttonType="RAISED" prefWidth="81.0" text="تعديل" />
+            <MFXButton buttonType="RAISED" prefWidth="81.0" text="إلغاء" />
+            <MFXButton buttonType="RAISED" prefWidth="81.0" text="حذف" />
+            <MFXButton buttonType="RAISED" prefWidth="81.0" style="-fx-background-color: #2196f3;" text="OK" />
+         </children>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </HBox>
+      <Separator prefWidth="200.0" />
+   </children>
+</GridPane>
