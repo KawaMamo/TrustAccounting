@@ -51,8 +51,10 @@ public class Navigator {
             Notifications.create().title("URISyntaxException").text(e.getMessage()).showError();
         } catch (IOException e) {
             e.printStackTrace();
+            Notifications.create().title("IOException").text(e.getMessage()).showError();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Notifications.create().title("InterruptedException").text(e.getMessage()).showError();
         }
         System.out.println(jsonObject);
         return jsonObject.getString("token");

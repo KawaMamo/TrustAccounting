@@ -3,7 +3,7 @@ package com.example.trustaccounting;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import model.Navigator;
-
+import org.controlsfx.control.Notifications;
 
 
 public class Navigation {
@@ -14,6 +14,7 @@ public class Navigation {
 
     @FXML
     private void initialize(){
+
         Navigator navigator = new Navigator("test");
         navigator.generateToken();
     }
