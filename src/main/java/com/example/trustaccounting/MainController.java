@@ -1,11 +1,15 @@
 package com.example.trustaccounting;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import model.Detachable;
+import model.LoginParameter;
+import model.WebClient;
+import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 
@@ -25,8 +29,21 @@ public class MainController {
     private void initialize(){
 
         addTabs();
-
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                // should be done by dongle
+                LoginParameter.setUserName("kawa");LoginParameter.setPassword("kawa");LoginParameter.generateBasicAuthentication();
+                // creating web client
+                WebClient webClient = new WebClient();
+                webClient.authorize();
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
+
+
 
     private void addTabs(){
 

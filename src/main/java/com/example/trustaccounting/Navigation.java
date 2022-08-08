@@ -2,7 +2,9 @@ package com.example.trustaccounting;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import model.LoginParameter;
 import model.Navigator;
+import model.WebClient;
 import org.controlsfx.control.Notifications;
 
 
@@ -15,8 +17,6 @@ public class Navigation {
     @FXML
     private void initialize(){
 
-        Navigator navigator = new Navigator("test");
-        navigator.generateToken();
     }
 
     public void setTitleLbl(String title){
