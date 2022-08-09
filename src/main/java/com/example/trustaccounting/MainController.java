@@ -1,6 +1,5 @@
 package com.example.trustaccounting;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
@@ -9,9 +8,10 @@ import javafx.scene.control.TreeView;
 import model.Detachable;
 import model.LoginParameter;
 import model.WebClient;
-import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainController {
@@ -37,15 +37,21 @@ public class MainController {
                 // creating web client
                 WebClient webClient = new WebClient();
                 webClient.authorize();
+
+                Map<String, String> postParam = new HashMap<>();
+                postParam.put("id", "22");
+                webClient.setEndPoint("trust/getById.php");
+                webClient.setPostParameters(postParam);
+
+                System.out.println(webClient.sendPostRequest());
             }
         };
         Thread thread = new Thread(runnable);
         thread.start();
 
 
+
     }
-
-
 
     private void addTabs(){
 

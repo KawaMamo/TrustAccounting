@@ -13,6 +13,7 @@ module com.example.trustaccounting {
     requires java.net.http;
     requires org.json;
 
+
     opens com.example.trustaccounting to javafx.fxml;
     exports com.example.trustaccounting;
 }

@@ -1,14 +1,17 @@
 package model;
 
+import javafx.application.Platform;
 import org.controlsfx.control.Notifications;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
 
 public class WebClient {
 
@@ -16,6 +19,8 @@ public class WebClient {
     private String endPoint;
     private Map<String, String> postParameters;
     HttpClient client = HttpClient.newHttpClient();
+    private int requestTries = 0;
+    private static String pHPSSIDCookie;
 
     Config config;
 
@@ -25,17 +30,81 @@ public class WebClient {
             config = new Config();
         } catch (IOException e) {
             e.printStackTrace();
-            // do logging
         }
     }
 
     public void authorize(){
+
         endPoint = "trust/auth.php";
         JSONObject response = sendGetRequest();
-        this.token = response.getString("token");
-        if(response.getString("status").equals("unauthorized")){
-            Notifications.create().title("Unauthorized connection").text("get the wright dongle and try again").showError();
+
+
+        if(response == null){
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Notifications.create().title("server Error").text("Check the server. It seems like the server is not functioning as it's supposed").showError();
+                }
+            });
+
+            while (response == null){
+                response = sendGetRequest();
+                if(response != null){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Notifications.create().title("Server is back online").text("The server is available now").showInformation();
+                        }
+                    });
+                    break;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }else if(!response.getString("status").equals("authorized")){
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Notifications.create().title("authorization Error").text("Check your licensing mean").showError();
+                }
+            });
+
+            while (!response.getString("status").equals("authorized")){
+                response = sendGetRequest();
+                if(response.getString("status").equals("authorized")){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Notifications.create().title("authorization successful").text("your are authorized to communicate with the server").showInformation();
+                        }
+                    });
+                    break;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }else {
+
+            this.token = response.getString("token");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Notifications.create().title("authorization successful").text("your are authorized to communicate with the server").showInformation();
+                }
+            });
         }
+
+
     }
 
     public void setEndPoint(String endPoint) {
@@ -48,32 +117,27 @@ public class WebClient {
 
     public JSONObject sendGetRequest(){
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                // should be done by dongle
-
-            }
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
-
         JSONObject jsonObject = null;
-
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(config.getProp().getProperty("domain")+endPoint))
                     .GET()
                     .header("Authorization", LoginParameter.getBasicAuthentication())
-                    .header("token", token)
                     .build();
 
             HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
             jsonObject = new JSONObject(response.body().toString());
 
+            String strResponse = URLDecoder.decode(response.headers().toString(), StandardCharsets.UTF_8);
+            int phpSsid = strResponse.indexOf("PHPSESSID");
+            String ssidCookie = strResponse.substring(phpSsid+10, phpSsid+36);
+            pHPSSIDCookie = ssidCookie;
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
             // TODO: do log4j
+        } catch (ConnectException e){
+            System.out.println(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
             // do log4j
@@ -82,15 +146,54 @@ public class WebClient {
             // do log4j
         }
 
-        // TODO: if not authorized ask for authorization
-        if(jsonObject.getString("status").equals("unauthorized")){
-            authorize();
-        }
-
         return jsonObject;
     }
 
     public static String getToken() {
         return token;
+    }
+
+    public JSONObject sendPostRequest(){
+        JSONObject jsonObject = null;
+        postParameters.put("token", token);
+        HttpRequest request = null;
+        System.out.println("getFormDataAsString(postParameters)"+getFormDataAsString(postParameters));
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(config.getProp().getProperty("domain")+endPoint))
+                    .POST(HttpRequest.BodyPublishers.ofString(getFormDataAsString(postParameters)))
+                    .header("Content-Type",  "application/x-www-form-urlencoded")
+                    .header("Cookie", "PHPSESSID="+pHPSSIDCookie)
+                    .build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        HttpResponse response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("response.body().toString()"+response.body().toString());
+        jsonObject = new JSONObject(response.body().toString());
+
+        return jsonObject;
+
+    }
+
+    private static String getFormDataAsString(Map<String, String> formData) {
+        StringBuilder formBodyBuilder = new StringBuilder();
+        for (Map.Entry<String, String> singleEntry : formData.entrySet()) {
+            if (formBodyBuilder.length() > 0) {
+                formBodyBuilder.append("&");
+            }
+            formBodyBuilder.append(URLEncoder.encode(singleEntry.getKey(), StandardCharsets.UTF_8));
+            formBodyBuilder.append("=");
+            formBodyBuilder.append(URLEncoder.encode(singleEntry.getValue(), StandardCharsets.UTF_8));
+        }
+        return formBodyBuilder.toString();
     }
 }
