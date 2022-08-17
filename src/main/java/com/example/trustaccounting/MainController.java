@@ -89,7 +89,7 @@ public class MainController {
     private void populateList(){
         quickAccessList.getItems().clear();
         quickAccessList.getItems().add("Account");
-        quickAccessList.getItems().add("material");
+        quickAccessList.getItems().add("Material");
         quickAccessList.getItems().add("test 3");
         quickAccessList.getItems().add("test 4");
 

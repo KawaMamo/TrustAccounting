@@ -4,12 +4,12 @@ public class CardList {
 
     public static String getIcon(String name){
         String icon;
-        if(name.equals("account")){
-            icon = "c_64px.png";
-        }else if(name.equals("material")) {
+        if(name.equals("Account")){
+            icon = "Account.png";
+        }else if(name.equals("Material")) {
             icon = "m_64px.png";
         }else {
-            icon = "Account.png";
+            icon = "c_64px.png";
         }
 
         return icon;

@@ -30,9 +30,9 @@ public class Cell extends ListCell<String> {
 
         setOnMouseClicked(mouseEvent -> {
 
-            Detachable newTab = new Detachable(getItem(), "g_32px.png");
+            Detachable newTab = new Detachable(getItem(), CardList.getIcon(getItem()));
             try {
-                newTab.setContent(FXMLLoader.load(this.getClass().getResource("accountCard.fxml")));
+                newTab.setContent(FXMLLoader.load(this.getClass().getResource(CardList.getLocation(getItem()))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
