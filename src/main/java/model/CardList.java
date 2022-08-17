@@ -14,4 +14,17 @@ public class CardList {
 
         return icon;
     }
+
+    public static String getLocation(String name){
+        String icon;
+        if(name.equals("Account")){
+            icon = "accountCard.fxml";
+        }else if(name.equals("Material")) {
+            icon = "materialCard.fxml";
+        }else {
+            icon = "Account.png";
+        }
+
+        return icon;
+    }
 }

@@ -3,6 +3,7 @@ package com.example.trustaccounting;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import model.Detachable;
@@ -22,17 +23,17 @@ public class MainController {
     @FXML
     private GridPane quickAccessGrid;
 
-    DraggableListView quickAccessList = new DraggableListView();
+    DraggableListView quickAccessList;
 
     private boolean isEditable = false;
 
     @FXML
     private void initialize(){
 
+        quickAccessList = new DraggableListView(workArea);
         addTabs();
         quickAccessGrid.add(quickAccessList,0, 1);
         populateList();
-
 
         /*Runnable runnable = new Runnable() {
             @Override
@@ -77,6 +78,7 @@ public class MainController {
 
     }
 
+
     @FXML
     private void editQuickList(){
         isEditable = !isEditable;
@@ -86,11 +88,12 @@ public class MainController {
 
     private void populateList(){
         quickAccessList.getItems().clear();
-        quickAccessList.getItems().add("account");
+        quickAccessList.getItems().add("Account");
         quickAccessList.getItems().add("material");
         quickAccessList.getItems().add("test 3");
         quickAccessList.getItems().add("test 4");
 
     }
+
 
 }

@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-class EditCell extends ListCell<String> {
+public class EditCell extends ListCell<String> {
 
     CheckBox checkBox = new CheckBox();
     HBox hBox = new HBox();
