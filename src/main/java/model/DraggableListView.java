@@ -14,7 +14,7 @@ public class DraggableListView extends ListView {
         setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> list) {
-                return new Cell(workArea);
+                return new com.example.trustaccounting.Cell(workArea);
             }
         });
     }
@@ -27,7 +27,7 @@ public class DraggableListView extends ListView {
                 if(isEditable){
                     return new EditCell();
                 }else {
-                    return new Cell(workArea);
+                    return new com.example.trustaccounting.Cell(workArea);
                 }
             }
         });

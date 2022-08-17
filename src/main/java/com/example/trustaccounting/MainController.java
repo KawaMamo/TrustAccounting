@@ -18,7 +18,7 @@ public class MainController {
     private SplitPane chatPane;
 
     @FXML
-    private TabPane workArea;
+    public TabPane workArea;
 
     @FXML
     private GridPane quickAccessGrid;
@@ -94,6 +94,8 @@ public class MainController {
         quickAccessList.getItems().add("test 4");
 
     }
+
+
 
 
 }
