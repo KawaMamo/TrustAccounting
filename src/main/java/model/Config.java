@@ -8,8 +8,8 @@ public class Config {
     Properties prop = new Properties();
     String fileName = "app.config";
 
-    public Config() throws IOException {
-        FileReader reader=new FileReader("app.config");
+    public Config(String fileName) throws IOException {
+        FileReader reader=new FileReader(fileName);
         prop.load(reader);
     }
 

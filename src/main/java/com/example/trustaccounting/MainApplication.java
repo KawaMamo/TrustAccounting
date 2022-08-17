@@ -35,7 +35,8 @@ public class MainApplication extends Application {
         stage.setWidth(bounds.getWidth());
         stage.setHeight(bounds.getHeight());
         // load config file
-        Config config = new Config();
+        String fileName = "app.config";
+        Config config = new Config(fileName);
         if(config.getProp().getProperty("fullScreen").equals("true")){
             stage.setMaximized(true);
         }

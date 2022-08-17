@@ -4,14 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
+import javafx.scene.layout.GridPane;
 import model.Detachable;
-import model.LoginParameter;
-import model.WebClient;
+import model.DraggableListView;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MainController {
@@ -23,19 +20,28 @@ public class MainController {
     private TabPane workArea;
 
     @FXML
-    private TreeView structureTree;
+    private GridPane quickAccessGrid;
+
+    DraggableListView quickAccessList = new DraggableListView();
+
+    private boolean isEditable = false;
 
     @FXML
     private void initialize(){
 
         addTabs();
-        Runnable runnable = new Runnable() {
+        quickAccessGrid.add(quickAccessList,0, 1);
+        populateList();
+
+
+        /*Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 // should be done by dongle
                 LoginParameter.setUserName("kawa");LoginParameter.setPassword("kawa");LoginParameter.generateBasicAuthentication();
                 // creating web client
-                WebClient webClient = new WebClient();
+                String fileName = "app.config";
+                WebClient webClient = new WebClient(fileName);
                 webClient.authorize();
 
                 Map<String, String> postParam = new HashMap<>();
@@ -47,9 +53,7 @@ public class MainController {
             }
         };
         Thread thread = new Thread(runnable);
-        thread.start();
-
-
+        thread.start();*/
 
     }
 
@@ -72,4 +76,21 @@ public class MainController {
         workArea.setTabMinWidth(120);
 
     }
+
+    @FXML
+    private void editQuickList(){
+        isEditable = !isEditable;
+        quickAccessList.changeCellFactory(isEditable);
+
+    }
+
+    private void populateList(){
+        quickAccessList.getItems().clear();
+        quickAccessList.getItems().add("account");
+        quickAccessList.getItems().add("material");
+        quickAccessList.getItems().add("test 3");
+        quickAccessList.getItems().add("test 4");
+
+    }
+
 }

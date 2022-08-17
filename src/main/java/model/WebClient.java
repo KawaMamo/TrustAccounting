@@ -24,10 +24,10 @@ public class WebClient {
 
     Config config;
 
-    public WebClient(){
+    public WebClient(String fileName){
 
         try {
-            config = new Config();
+            config = new Config(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
