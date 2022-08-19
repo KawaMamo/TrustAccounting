@@ -1,5 +1,6 @@
 package model;
 
+import com.example.trustaccounting.MainController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -9,6 +10,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 
 public class EditCell extends ListCell<String> {
@@ -18,7 +22,6 @@ public class EditCell extends ListCell<String> {
     ImageView imageView;
 
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
-
 
     public EditCell(){
         super();
@@ -34,7 +37,7 @@ public class EditCell extends ListCell<String> {
         checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                System.out.println(getItem());
+                System.out.println(getIndex());
             }
         });
 

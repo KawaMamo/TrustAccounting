@@ -66,9 +66,9 @@ public class Detachable extends Tab {
         title.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                if(mouseEvent.getSceneY() > getGraphic().localToScreen(getGraphic().getBoundsInLocal()).getMinY() || mouseEvent.getSceneY() < getGraphic().localToScreen(getGraphic().getBoundsInLocal()).getMaxY()){
+                // 50 is added to mouse Y to decrease sensitivity for bad mouses
+                if(mouseEvent.getSceneY() > getGraphic().localToScreen(getGraphic().getBoundsInLocal()).getMinY() || mouseEvent.getSceneY()+50 < getGraphic().localToScreen(getGraphic().getBoundsInLocal()).getMaxY()){
                     if(!isDetached){
-
                         gridpane.getColumnConstraints().addAll(col1,col2,col3);
                         gridpane.getRowConstraints().addAll(row1, row2,row3);
 

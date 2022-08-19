@@ -3,13 +3,14 @@ package com.example.trustaccounting;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import model.Detachable;
-import model.DraggableListView;
+import model.*;
+import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainController {
@@ -23,19 +24,57 @@ public class MainController {
     @FXML
     private GridPane quickAccessGrid;
 
-    DraggableListView quickAccessList;
+    public static DraggableListView quickAccessList;
 
     private boolean isEditable = false;
 
     @FXML
     private void initialize(){
 
-        quickAccessList = new DraggableListView(workArea);
-        addTabs();
-        quickAccessGrid.add(quickAccessList,0, 1);
-        populateList();
+        try {
+            Config cardsData = new Config("cards.config");
+            quickAccessList = new DraggableListView(workArea, cardsData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Notifications.create().text(e.getMessage()).showInformation();
+        }
 
-        /*Runnable runnable = new Runnable() {
+        quickAccessGrid.add(quickAccessList,0, 1);
+        addWelcomeTab();
+        setWorkAreaStyle();
+        //authorizeAndPost();
+
+    }
+
+    @FXML
+    private void editQuickList(){
+        isEditable = !isEditable;
+        quickAccessList.changeCellFactory(isEditable);
+
+    }
+
+    private void addWelcomeTab(){
+
+        Detachable newTab = new Detachable("Welcome", CardList.getIcon("Welcome"));
+        try {
+            newTab.setContent(FXMLLoader.load(this.getClass().getResource("welcomeCard.fxml")));
+            newTab.setClosable(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        workArea.getTabs().add(newTab);
+
+    }
+
+    private void setWorkAreaStyle(){
+        workArea.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+        workArea.setTabMinHeight(26);
+        workArea.setTabMinWidth(120);
+    }
+
+    private void authorizeAndPost(){
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 // should be done by dongle
@@ -54,48 +93,6 @@ public class MainController {
             }
         };
         Thread thread = new Thread(runnable);
-        thread.start();*/
-
+        thread.start();
     }
-
-    private void addTabs(){
-
-        Detachable two = new Detachable("Material", "m_64px.png");
-        Detachable newTab = new Detachable("Account", "g_32px.png");
-
-        try {
-            newTab.setContent(FXMLLoader.load(this.getClass().getResource("accountCard.fxml")));
-            two.setContent(FXMLLoader.load(this.getClass().getResource("materialCard.fxml")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        workArea.getTabs().add(newTab);
-        workArea.getTabs().add(two);
-        workArea.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
-        workArea.setTabMinHeight(26);
-        workArea.setTabMinWidth(120);
-
-    }
-
-
-    @FXML
-    private void editQuickList(){
-        isEditable = !isEditable;
-        quickAccessList.changeCellFactory(isEditable);
-
-    }
-
-    private void populateList(){
-        quickAccessList.getItems().clear();
-        quickAccessList.getItems().add("Account");
-        quickAccessList.getItems().add("Material");
-        quickAccessList.getItems().add("test 3");
-        quickAccessList.getItems().add("test 4");
-
-    }
-
-
-
-
 }
