@@ -7,8 +7,11 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import model.*;
 import org.controlsfx.control.Notifications;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +45,7 @@ public class MainController {
         quickAccessGrid.add(quickAccessList,0, 1);
         addWelcomeTab();
         setWorkAreaStyle();
-        //authorizeAndPost();
+        authorizeAndPost();
 
     }
 
@@ -77,19 +80,18 @@ public class MainController {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                // should be done by dongle
-                LoginParameter.setUserName("kawa");LoginParameter.setPassword("kawa");LoginParameter.generateBasicAuthentication();
+                LoginParameter.setUserName("desk");
+                LoginParameter.setPassword("P@ssw0rd");
+                System.out.println(LoginParameter.getUserName());
                 // creating web client
                 String fileName = "app.config";
                 WebClient webClient = new WebClient(fileName);
                 webClient.authorize();
 
-                Map<String, String> postParam = new HashMap<>();
-                postParam.put("id", "22");
-                webClient.setEndPoint("trust/getById.php");
-                webClient.setPostParameters(postParam);
+                webClient.setEndPoint("/users");
+                HttpResponse response = webClient.sendGetRequest();
 
-                System.out.println(webClient.sendPostRequest());
+                System.out.println(response.body().toString());
             }
         };
         Thread thread = new Thread(runnable);

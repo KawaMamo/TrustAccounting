@@ -8,11 +8,6 @@ public class LoginParameter {
     private static String password;
     private static String basicAuthentication;
 
-    public LoginParameter(String userName, String password){
-        this.userName = userName;
-        this.password = password;
-    }
-
     public static String getUserName() {
         return userName;
     }

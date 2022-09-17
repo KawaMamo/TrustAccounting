@@ -1,6 +1,7 @@
 package model;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 public class Config {
@@ -9,8 +10,8 @@ public class Config {
     String fileName = "app.config";
 
     public Config(String fileName) throws IOException {
-        FileReader reader=new FileReader(fileName);
-        prop.load(reader);
+        FileInputStream input = new FileInputStream(new File(fileName));
+        prop.load(new InputStreamReader(input, Charset.forName("UTF-8")));
     }
 
     public void write() throws IOException {
@@ -20,5 +21,6 @@ public class Config {
     public Properties getProp(){
         return prop;
     }
+
 
 }

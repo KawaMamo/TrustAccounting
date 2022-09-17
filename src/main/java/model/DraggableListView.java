@@ -6,6 +6,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
 import javafx.util.Callback;
 
+import java.io.IOException;
+
 public class DraggableListView extends ListView {
 
     private TabPane workArea;

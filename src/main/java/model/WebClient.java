@@ -10,14 +10,17 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
+
+import static javax.security.auth.callback.ConfirmationCallback.OK;
 
 
 public class WebClient {
 
     private static String token = "dummyToken";
     private String endPoint;
-    private Map<String, String> postParameters;
+    private Map<String, String> postParameters = new HashMap<>();
     HttpClient client = HttpClient.newHttpClient();
     private int requestTries = 0;
     private static String pHPSSIDCookie;
@@ -35,9 +38,11 @@ public class WebClient {
 
     public void authorize(){
 
-        endPoint = "trust/auth.php";
-        JSONObject response = sendGetRequest();
-
+        endPoint = "/login";
+        postParameters.put("username", LoginParameter.getUserName());
+        postParameters.put("password", LoginParameter.getPassword());
+        HttpResponse response = sendPostRequest();
+        System.out.println(response);
 
         if(response == null){
 
@@ -48,8 +53,8 @@ public class WebClient {
                 }
             });
 
-            while (response == null){
-                response = sendGetRequest();
+            while (response.body() == null){
+                response = sendPostRequest();
                 if(response != null){
                     Platform.runLater(new Runnable() {
                         @Override
@@ -66,7 +71,7 @@ public class WebClient {
                 }
             }
 
-        }else if(!response.getString("status").equals("authorized")){
+        }else if(!(response.statusCode() == 200)){
 
             Platform.runLater(new Runnable() {
                 @Override
@@ -75,9 +80,9 @@ public class WebClient {
                 }
             });
 
-            while (!response.getString("status").equals("authorized")){
-                response = sendGetRequest();
-                if(response.getString("status").equals("authorized")){
+            while (!(response.statusCode() == 200)){
+                response = sendPostRequest();
+                if(response.statusCode() == 200){
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -95,7 +100,8 @@ public class WebClient {
 
         }else {
 
-            this.token = response.getString("token");
+            JSONObject jsonObject = new JSONObject(response.body().toString());
+            this.token = jsonObject.getString("access_token");
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -115,23 +121,18 @@ public class WebClient {
         this.postParameters = postParameters;
     }
 
-    public JSONObject sendGetRequest(){
+    public HttpResponse sendGetRequest(){
 
-        JSONObject jsonObject = null;
+        HttpResponse response = null;
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(config.getProp().getProperty("domain")+endPoint))
                     .GET()
-                    .header("Authorization", LoginParameter.getBasicAuthentication())
+                    .header("Authorization", "Bearer "+token)
                     .build();
 
-            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            jsonObject = new JSONObject(response.body().toString());
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            String strResponse = URLDecoder.decode(response.headers().toString(), StandardCharsets.UTF_8);
-            int phpSsid = strResponse.indexOf("PHPSESSID");
-            String ssidCookie = strResponse.substring(phpSsid+10, phpSsid+36);
-            pHPSSIDCookie = ssidCookie;
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -146,18 +147,19 @@ public class WebClient {
             // do log4j
         }
 
-        return jsonObject;
+        return response;
     }
 
     public static String getToken() {
         return token;
     }
 
-    public JSONObject sendPostRequest(){
+    public HttpResponse sendPostRequest(){
         JSONObject jsonObject = null;
-        postParameters.put("token", token);
+        postParameters.put("Authorization", "Bearer "+token);
         HttpRequest request = null;
         System.out.println("getFormDataAsString(postParameters)"+getFormDataAsString(postParameters));
+        System.out.println(config.getProp().getProperty("domain")+endPoint);
         try {
             request = HttpRequest.newBuilder()
                     .uri(new URI(config.getProp().getProperty("domain")+endPoint))
@@ -177,10 +179,7 @@ public class WebClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("response.body().toString()"+response.body().toString());
-        jsonObject = new JSONObject(response.body().toString());
-
-        return jsonObject;
+        return response;
 
     }
 
