@@ -88,7 +88,7 @@ public class MainController {
                 WebClient webClient = new WebClient(fileName);
                 webClient.authorize();
 
-                webClient.setEndPoint("/users");
+                webClient.setEndPoint("api/users");
                 HttpResponse response = webClient.sendGetRequest();
 
                 System.out.println(response.body().toString());

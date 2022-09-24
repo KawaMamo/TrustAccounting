@@ -24,11 +24,11 @@
    <children>
       <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0">
          <children>
-            <MFXButton text="&lt;&lt;" />
-            <MFXButton text="&lt;" />
-            <MFXTextField alignment="CENTER" minHeight="10.0" minWidth="10.0" prefHeight="31.0" prefWidth="50.0" />
-            <MFXButton text="&gt;" />
-            <MFXButton text="&gt;&gt;" />
+            <MFXButton onAction="#nextPage" text="&lt;&lt;" />
+            <MFXButton onAction="#next" text="&lt;" />
+            <MFXTextField fx:id="idTF" alignment="CENTER" minHeight="10.0" minWidth="10.0" prefHeight="31.0" prefWidth="50.0" />
+            <MFXButton onAction="#previous" text="&gt;" />
+            <MFXButton onAction="#prePage" text="&gt;&gt;" />
          </children>
          <padding>
             <Insets left="20.0" right="20.0" top="10.0" />

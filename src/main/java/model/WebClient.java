@@ -165,7 +165,37 @@ public class WebClient {
                     .uri(new URI(config.getProp().getProperty("domain")+endPoint))
                     .POST(HttpRequest.BodyPublishers.ofString(getFormDataAsString(postParameters)))
                     .header("Content-Type",  "application/x-www-form-urlencoded")
-                    .header("Cookie", "PHPSESSID="+pHPSSIDCookie)
+                    .header("Authorization", "Bearer "+token)
+                    .build();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        HttpResponse response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return response;
+
+    }
+
+    public HttpResponse sendPostRequest(String endPoint, String payload){
+        setEndPoint(endPoint);
+        JSONObject jsonObject = null;
+        postParameters.put("Authorization", "Bearer "+token);
+        HttpRequest request = null;
+        //System.out.println("getFormDataAsString(postParameters)"+getFormDataAsString(postParameters));
+        //System.out.println(config.getProp().getProperty("domain")+endPoint);
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(new URI(config.getProp().getProperty("domain")+endPoint))
+                    .POST(HttpRequest.BodyPublishers.ofString(payload))
+                    .header("Content-Type",  "application/json")
+                    .header("Authorization", "Bearer "+token)
                     .build();
         } catch (URISyntaxException e) {
             e.printStackTrace();

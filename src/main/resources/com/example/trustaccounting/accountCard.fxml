@@ -29,9 +29,9 @@
                   <Separator prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
                   <VBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <children>
-                        <MFXTextField maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="102.0" />
-                        <MFXTextField maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="102.0" />
-                        <MFXTextField maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="102.0" />
+                        <MFXTextField fx:id="accountCode" maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="102.0" />
+                        <MFXTextField fx:id="accountNameTF" maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="102.0" />
+                        <MFXTextField fx:id="englishNameTF" maxWidth="1.7976931348623157E308" minHeight="30.0" prefHeight="30.0" prefWidth="102.0" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
